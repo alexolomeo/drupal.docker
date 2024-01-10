@@ -1,0 +1,67 @@
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Upgrade all packages for all new {{ ansible_distribution }} {{ ansible_distribution_major_version }}  ..."
+  ansible.builtin.apt:
+    update_cache: true
+    state: latest
+    upgrade: true
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install package dependency for docker-ce"
+  ansible.builtin.apt:
+    update_cache: true
+    state: latest
+    name:
+      - curl
+      - ca-certificates
+      - apt-transport-https
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Apt-key add key.gpg"
+  ansible.builtin.apt_key: 
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present 
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install repository for ubuntu 20"
+  ansible.builtin.apt_repository: 
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+  when: ansible_distribution == 'Ubuntu' and  ansible_distribution_major_version == '20'
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install repository for ubuntu 22"
+  ansible.builtin.apt_repository: 
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+  when: ansible_distribution == 'Ubuntu' and  ansible_distribution_major_version == '22'
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - install Docker CE"
+  ansible.builtin.apt: 
+    name: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    update_cache: yes
+    state: present
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Setup docker user"
+  become: yes
+  ansible.builtin.user:
+    name: docker
+    groups: "docker"
+    append: yes
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install Docker module for Python"
+  ansible.builtin.pip:
+    name: docker
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install Docker-Compose&Set Permission"
+  ansible.builtin.get_url:
+    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: '755'
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Create Docker-Compose symlink"
+  ansible.builtin.command:
+    cmd: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    creates: /usr/bin/docker-compose
+

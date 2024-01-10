@@ -1,0 +1,68 @@
+---
+
+- name: Basic Packages for Centos or RHEL.
+  ansible.builtin.package:
+    name: "{{ drupal_os_requirements }}"
+    state: present
+
+
+- name: REPO BLOCK - Install epel
+  when:
+    - (ansible_os_family == "RedHat" and
+      ansible_distribution_major_version in [ "7", "8", "9" ])
+  block:
+    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install epel gpg key
+      ansible.builtin.rpm_key:
+        key: "{{ epel_gpg_key }}"
+        state: present
+
+    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install epel-release
+      ansible.builtin.package:
+        name: "{{ epel_url }}"
+        state: present
+      notify:
+        - Update package cache
+
+    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - UPDATE
+      become: yes
+      ansible.builtin.command: "sudo dnf -y update"
+
+    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - DNF Config Manages
+      become: yes
+      ansible.builtin.command: "sudo dnf config-manager --set-enabled crb"
+
+    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - DNF epel-release epel-next-release
+      become: yes
+      ansible.builtin.command: "sudo dnf install epel-release epel-next-release"
+
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - install Docker CE"
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    update_cache: yes
+    state: present
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Setup docker user"
+  become: yes
+  ansible.builtin.user:
+    name: docker
+    groups: "docker"
+    append: yes
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install Docker module for Python"
+  ansible.builtin.pip:
+    name: docker
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Install Docker-Compose&Set Permission"
+  ansible.builtin.get_url:
+    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: '755'
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Create Docker-Compose symlink"
+  ansible.builtin.command:
+    cmd: ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    creates: /usr/bin/docker-compose

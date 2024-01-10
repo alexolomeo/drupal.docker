@@ -1,0 +1,27 @@
+---
+# vars file for drupal.docker
+# Author: Alexander Aguilar
+# github.com/alexolomeo
+#
+
+_drupal_os_requirements:
+  default:
+    - firewalld
+    - zip
+    - unzip
+  Debian:
+    - firewalld
+    - zip
+    - unzip
+    - nmap
+  RedHat:
+    - firewalld
+    - zip
+  Suse:
+    - firewalld
+    - zip
+    - unzip
+    - nmap
+
+drupal_os_requirements: "{{ _drupal_os_requirements[ansible_os_family] | default(_drupal_os_requirements['default']) }}"
+

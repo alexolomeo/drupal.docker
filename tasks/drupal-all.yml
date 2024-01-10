@@ -1,0 +1,51 @@
+- name: Docker - Create deploy docker-compose  directory
+  ansible.builtin.file:
+    path: "/opt/deploy/{{ drupal_project_name }}"
+    state: directory
+    owner: docker
+    group: docker
+    force: no
+
+- name: Docker - Pull image mysql
+  ansible.builtin.docker_image:
+    name: mariadb:{{ mariadb_version }}
+    source: pull
+    state: present
+  when: drupal_type_database == 'mariadb'
+
+- name: Docker - Pull image postgresql
+  ansible.builtin.docker_image:
+    name: postgres:{{ postgres_version }}
+    source: pull
+    state: present
+  when: drupal_type_database == 'postgresql'
+
+- name: Docker - Pull image Nginx
+  docker_image:
+    name: nginx
+    source: pull
+    state: present
+
+- name: "Docker - Copy Docker-compose for Mariadb"
+  ansible.builtin.template:
+    src: docker-compose-mariadb.j2
+    dest: /opt/deploy/{{ drupal_project_name }}/docker-compose.yml
+    mode: 0440
+    owner: docker
+    group: docker
+  when: drupal_type_database == 'mariadb'
+
+- name: "Docker - Copy Docker-compose for Postgresql"
+  ansible.builtin.template:
+    src: docker-compose-postgresql.j2
+    dest: /opt/deploy/{{ drupal_project_name }}/docker-compose.yml
+    mode: 0440
+    owner: docker
+    group: docker
+  when: drupal_type_database == 'postgresql'
+
+- name: Docker - Deploy Docker Compose
+  ansible.builtin.command: 
+    cmd: sudo docker-compose up -d
+    chdir: "/opt/deploy/{{ drupal_project_name }}"
+

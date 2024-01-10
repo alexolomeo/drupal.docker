@@ -1,0 +1,10 @@
+---
+
+# Include Basic dependencies for System Operation for Docker.
+- name: Include OS-specific package dependency for  family {{ ansible_os_family }} of distribution {{ ansible_distribution }} {{ ansible_distribution_major_version }}.
+  include_tasks: "install-{{ ansible_os_family }}.yml"
+
+# Install/Configure Drupal.
+- name: Install Drupal and Configure on {{ ansible_distribution }} {{ ansible_distribution_major_version }}.
+  include_tasks: "drupal-all.yml"
+
