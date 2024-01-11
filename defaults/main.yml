@@ -1,14 +1,17 @@
+#Project info
 drupal_domain_name: domain.com
 drupal_project_name: default
+
+#Drupal Administrator Default
+drupal_admin_username: admin
+drupal_admin_password: XtremeXxXxX
+
+#Database, Choose Mariadb or Postgresql
+drupal_db_name: drupal
+drupal_db_username: admin
+drupal_db_password: XtremeXxXxX
 
 drupal_type_database: mariadb 	#mariadb, postgresql
 postgres_version: 14		#12, 13, 14
 mariadb_version: latest		#8.0, 10.0, latest
-
-drupal_admin_username: admin
-drupal_admin_password: XtremeXxXxX
-
-drupal_db_name: drupal
-drupal_db_username: admin
-drupal_db_password: XtremeXxXxX
 

@@ -32,19 +32,24 @@ ansible_ssh_private_key_file= ./KEY-UBUNTU
   become: true
 
   vars:
+    # Project
     drupal_domain_name: domain.com
     drupal_project_name: default
 
+    # Drupal Administrator
+    drupal_admin_username: admin
+    drupal_admin_password: XtremeXxXxX
+    
+	
+    # Database, Choose MariaDB and Postgresql
     drupal_type_database: mariadb   #mariadb, postgresql
     postgres_version: 14            #12, 13, 14
     mariadb_version: latest         #8.0, 10.0, latest
 
-    drupal_admin_username: admin
-    drupal_admin_password: XtremeXxXxX
-
     drupal_db_name: drupal
     drupal_db_username: admin
     drupal_db_password: XtremeXxXxX
+
 
   roles:
     - drupal.docker
