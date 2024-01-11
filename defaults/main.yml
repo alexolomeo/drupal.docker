@@ -13,6 +13,7 @@ drupal_db_username: admin
 drupal_db_password: XtremeXxXxX
 
 drupal_type_database: mariadb 	#mariadb, postgresql
+drupal_db_root_password: XtremeXxXxX
 postgres_version: 14		#12, 13, 14
 mariadb_version: latest		#8.0, 10.0, latest
 
