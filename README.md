@@ -1,4 +1,4 @@
-# Ansible Role: semaphore.docker
+# Ansible Role: drupal.docker
 
 A full list of defaults and their values can be found in the `defaults/main.yml`.
 
@@ -7,14 +7,14 @@ email  : alexolomeo@gmail.com
 
 ## host file
 
-[semaphoreui]
+[drupalserver]
 localhost
 
-[semaphoreui:vars]
+[drupalserver:vars]
 ansible_user=ubuntu
 #ansible_become=yes
 #ansible_become_method=sudo
-ansible_port= 2244
+#ansible_port= 2244
 ansible_ssh_private_key_file= ./KEY-UBUNTU
 
 
@@ -24,22 +24,26 @@ ansible_ssh_private_key_file= ./KEY-UBUNTU
 ```yml
 
 ---
-- name: semaphore
-  hosts: semaphoreui
+- name: Drupal Installer Docker
+  hosts: drupalserver
   become: true
 
   vars:
-    semaphore_type_database: mysql
-    semaphore_admin_username: admin
-    semaphore_admin_password: XtremeXxXxX
+    drupal_project_name: default
 
-    semaphore_db_name: semaphore
-    semaphore_db_username: semaphore
-    semaphore_db_password: semaphore
+    drupal_type_database: mariadb   #mariadb, postgresql
+    postgres_version: 14            #12, 13, 14
+    mariadb_version: latest         #8.0, 10.0, latest
 
+    drupal_admin_username: admin
+    drupal_admin_password: XtremeXxXxX
+
+    drupal_db_name: drupal
+    drupal_db_username: admin
+    drupal_db_password: XtremeXxXxX
 
   roles:
-    - semaphore.docker
+    - drupal.docker
 
 ```
 

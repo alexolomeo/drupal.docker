@@ -1,8 +1,8 @@
 drupal_project_name: default
 
 drupal_type_database: mariadb 	#mariadb, postgresql
-postgres_version:14		#12, 13, 14
-mariadb_version:latest		#8.0, 10.0
+postgres_version: 14		#12, 13, 14
+mariadb_version: latest		#8.0, 10.0, latest
 
 drupal_admin_username: admin
 drupal_admin_password: XtremeXxXxX
