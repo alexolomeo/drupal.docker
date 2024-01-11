@@ -32,6 +32,7 @@ ansible_ssh_private_key_file= ./KEY-UBUNTU
   become: true
 
   vars:
+    drupal_domain_name: domain.com
     drupal_project_name: default
 
     drupal_type_database: mariadb   #mariadb, postgresql
