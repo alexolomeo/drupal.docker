@@ -1,4 +1,4 @@
-- name: Docker - Create deploy docker-compose  directory
+- name: Docker - Create deploy docker-compose  Main directory
   ansible.builtin.file:
     path: "/opt/deploy/{{ drupal_project_name }}"
     state: directory
@@ -6,7 +6,7 @@
     group: docker
     force: no
 
-- name: Docker - Create deploy docker-compose  directory
+- name: Docker - Create deploy docker-compose  SRC directory
   ansible.builtin.file:
     path: "/opt/deploy/{{ drupal_project_name }}/src"
     state: directory
@@ -14,7 +14,7 @@
     group: docker
     force: no
 
-- name: Docker - Create deploy docker-compose  directory
+- name: Docker - Create deploy docker-compose  DB directory
   ansible.builtin.file:
     path: "/opt/deploy/{{ drupal_project_name }}/db"
     state: directory
@@ -22,7 +22,7 @@
     group: docker
     force: no
 
-- name: Docker - Create deploy Dockerfile  directory
+- name: Docker - Create deploy Dockerfile  php-fpm directory
   ansible.builtin.file:
     path: "/opt/deploy/{{ drupal_project_name }}/php-fpm"
     state: directory
@@ -32,7 +32,7 @@
 
 - name: Docker - Create deploy Dockerfile for deploy
   ansible.builtin.template:
-    src: Dockefile.j2
+    src: Dockerfile.j2
     path: "/opt/deploy/{{ drupal_project_name }}/php-fpm/Dockerfile"
     mode: 0644
     owner: docker
