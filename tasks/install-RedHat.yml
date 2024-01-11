@@ -20,8 +20,6 @@
       ansible.builtin.package:
         name: "{{ epel_url }}"
         state: present
-      notify:
-        - Update package cache
 
     - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - UPDATE
       become: yes
@@ -54,7 +52,6 @@
       - docker-ce-cli
       - containerd.io
       - docker-compose-plugin
-
     update_cache: yes
     state: present
 
