@@ -33,7 +33,7 @@
 - name: Docker - Create deploy Dockerfile for deploy
   ansible.builtin.template:
     src: Dockerfile.j2
-    path: "/opt/deploy/{{ drupal_project_name }}/php-fpm/Dockerfile"
+    dest: "/opt/deploy/{{ drupal_project_name }}/php-fpm/Dockerfile"
     mode: 0644
     owner: docker
     group: docker
@@ -41,7 +41,7 @@
 - name: Docker - Create deploy xdebug for deploy
   ansible.builtin.template:
     src: xdebug.ini.j2
-    path: "/opt/deploy/{{ drupal_project_name }}/php-fpm/xdebug.ini"
+    dest: "/opt/deploy/{{ drupal_project_name }}/php-fpm/xdebug.ini"
     mode: 0644
     owner: docker
     group: docker
@@ -49,7 +49,7 @@
 - name: Docker - Copy Nginx Server conf
   ansible.builtin.template:
     src: server.nginx.j2
-    path: "/opt/deploy/{{ drupal_project_name }}/server.conf"
+    dest: "/opt/deploy/{{ drupal_project_name }}/server.conf"
     mode: 0644
     owner: docker
     group: docker
@@ -57,7 +57,7 @@
 - name: Docker - Copy Nginx Custom Website
   ansible.builtin.template:
     src: conf.nginx.j2
-    path: "/opt/deploy/{{ drupal_project_name }}/site.conf"
+    dest: "/opt/deploy/{{ drupal_project_name }}/site.conf"
     mode: 0644
     owner: docker
     group: docker
