@@ -1,4 +1,5 @@
 #Project info
+drupal_version: 8	# 8, 9, 10
 drupal_domain_name: domain.com
 drupal_project_name: default
 
