@@ -7,6 +7,8 @@ email  : alexolomeo@gmail.com
 
 ## host file
 
+```yml
+
 [drupalserver]
 localhost
 
@@ -17,6 +19,7 @@ ansible_user=ubuntu
 #ansible_port= 2244
 ansible_ssh_private_key_file= ./KEY-UBUNTU
 
+```
 
 ## Example Playbook
 
