@@ -69,4 +69,7 @@
   ansible.builtin.service:
     name: docker
     enabled: yes
+  notify:
+    - restart drupal docker
+
 
