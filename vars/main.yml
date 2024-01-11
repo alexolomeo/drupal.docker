@@ -21,6 +21,7 @@ _drupal_os_requirements:
     - unzip
     - vim
     - net-tools
+    - python3-pip
   Suse:
     - firewalld
     - zip
