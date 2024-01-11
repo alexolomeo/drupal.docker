@@ -29,14 +29,16 @@
       become: yes
       ansible.builtin.command: "sudo dnf config-manager --set-enabled crb"
 
-    - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - DNF epel-release epel-next-release
-      become: yes
-      ansible.builtin.command: "sudo dnf install epel-release epel-next-release"
-
     - name: REPO {{ ansible_distribution }} {{ ansible_distribution_major_version }} - DNF Docker repository
       become: yes
       ansible.builtin.command: "sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo"
 
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Setup docker user"
+  become: yes
+  ansible.builtin.group:
+    name: docker
+    state: present
 
 - name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Setup docker user"
   become: yes
@@ -61,6 +63,6 @@
 
 - name: O.S. "{{ ansible_distribution }} {{ ansible_distribution_major_version }} - Enable service Docker-ce, and not touch the state"
   ansible.builtin.service:
-    name: docker-ce
+    name: docker
     enabled: yes
 
