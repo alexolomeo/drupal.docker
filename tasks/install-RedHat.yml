@@ -70,6 +70,10 @@
     name: docker
     enabled: yes
   notify:
-    - restart drupal docker
+    - restart docker
+
+- name: "O.S. {{ ansible_distribution }} {{ ansible_distribution_major_version }} - Start Docker"
+  become: yes
+  ansible.builtin.command: "sudo systemctl restart docker"
 
 
