@@ -1,0 +1,188 @@
+server {
+    listen 80 default_server;
+    server_name _;
+    root "/var/www/html/{{ drupal_project_name }}";
+    index index.php;
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    # Very rarely should these ever be accessed outside of your lan
+    location ~* \.(txt|log)$ {
+        allow 192.168.0.0/16;
+        deny all;
+    }
+
+    location ~ \..*/.*\.php$ {
+        return 403;
+    }
+
+    location ~ ^/sites/.*/private/ {
+        return 403;
+    }
+
+    location ~ ^/sites/[^/]+/files/.*\.php$ {
+        deny all;
+    }
+
+    location ~* ^/.well-known/ {
+        allow all;
+    }
+
+    location ~ (^|/)\. {
+        return 403;
+    }
+
+    location / {
+        # try_files $uri @rewrite; # For Drupal <= 6
+        try_files $uri /index.php?$query_string; # For Drupal >= 7
+    }
+
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?q=$1;
+    }
+
+    location ~ /vendor/.*\.php$ {
+        deny all;
+        return 404;
+    }
+
+    location ~ '\.php$|^/update.php' {
+        fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+        include fastcgi_params;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_intercept_errors on;
+	fastcgi_pass 127.0.0.1:9000;
+    }
+
+    location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
+        try_files $uri @rewrite;
+    }
+
+    location ~ ^(/[a-z\-]+)?/system/files/ { # For Drupal >= 7
+        try_files $uri /index.php?$query_string;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        try_files $uri @rewrite;
+        expires max;
+        log_not_found off;
+    }
+}
+server {
+    server_name {{ drupal_project_name }} www.{{ drupal_domain_name }}; # managed by Certbot
+    root "/var/www/html/{{ drupal_project_name }}";
+    index index.php;
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    # Very rarely should these ever be accessed outside of your lan
+    location ~* \.(txt|log)$ {
+        allow 192.168.0.0/16;
+        deny all;
+    }
+
+    location ~ \..*/.*\.php$ {
+        return 403;
+    }
+
+    location ~ ^/sites/.*/private/ {
+        return 403;
+    }
+
+    location ~ ^/sites/[^/]+/files/.*\.php$ {
+        deny all;
+    }
+
+    location ~* ^/.well-known/ {
+        allow all;
+    }
+
+    location ~ (^|/)\. {
+        return 403;
+    }
+
+    location / {
+        # try_files $uri @rewrite; # For Drupal <= 6
+        try_files $uri /index.php?$query_string; # For Drupal >= 7
+    }
+
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?q=$1;
+    }
+
+    location ~ /vendor/.*\.php$ {
+        deny all;
+        return 404;
+    }
+
+    location ~ '\.php$|^/update.php' {
+        fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+        include fastcgi_params;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_intercept_errors on;
+	fastcgi_pass 127.0.0.1:9000;
+    }
+
+    location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
+        try_files $uri @rewrite;
+    }
+
+    location ~ ^(/[a-z\-]+)?/system/files/ { # For Drupal >= 7
+        try_files $uri /index.php?$query_string;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        try_files $uri @rewrite;
+        expires max;
+        log_not_found off;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/{{ drupal_domain_name }}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/{{ drupal_domain_name }}/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+}server {
+    if ($host = www.{{ drupal_domain_name }}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = {{ drupal_domain_name }}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80 ;
+    server_name {{ drupal_domain_name }} www.{{ drupal_domain_name }};
+    return 404; # managed by Certbot
+}
+
