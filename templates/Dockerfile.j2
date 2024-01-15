@@ -1,6 +1,7 @@
 FROM php:7.3.6-fpm
 LABEL maintainer="charafi.adil@gmail.com"
 
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --fix-missing \
     mysql-client \
     imagemagick \
