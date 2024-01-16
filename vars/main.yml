@@ -16,6 +16,7 @@ _drupal_os_requirements:
     - nmap
   RedHat:
     - firewalld
+    - php
     - zip
     - nmap
     - unzip
