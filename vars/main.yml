@@ -7,8 +7,13 @@
 _drupal_os_requirements:
   default:
     - firewalld
+    - php
     - zip
+    - nmap
     - unzip
+    - vim
+    - net-tools
+    - python3-pip
   Debian:
     - firewalld
     - zip
