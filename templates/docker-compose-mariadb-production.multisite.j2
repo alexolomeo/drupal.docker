@@ -6,7 +6,6 @@ services:
       - "9000:9000"
     volumes:
       - drupal-data:/var/www/html
-
   database:
     restart: unless-stopped
     image: mariadb:latest
@@ -19,7 +18,6 @@ services:
       - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
-
 volumes:
   drupal-data:
   db-data:
